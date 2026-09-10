@@ -9,10 +9,10 @@ from google import genai
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv("FLASK_SECRET_KEY", "your_default_secret_key")  # Replace with a secure key in production
+app.secret_key = os.getenv("SECRET_KEY", "change-this-to-a-random-secret-key")
 
 # ---------------------------------------------------------------
-# MySQL connection settings
+# MySQL Connection Configuration
 # ---------------------------------------------------------------
 DB_CONFIG = {
     "host": "localhost",
@@ -49,7 +49,7 @@ def menu():
 
 
 # ---------------------------------------------------------------
-# Chatbot Route (Gemini API Integration)
+# Chatbot Route (Grounded Gemini AI)
 # ---------------------------------------------------------------
 @app.route("/api/chat", methods=["POST"])
 def chat():
@@ -60,12 +60,28 @@ def chat():
         return jsonify({"reply": "Please enter a valid message."}), 400
 
     try:
-        # Context prompt for hotel inquiries
-        prompt = f"""
-        You are a helpful and polite concierge for Friendship Hotel in Kathmandu, Nepal.
-        Answer the customer's question clearly and concisely.
-        Customer message: {user_message}
+        system_instruction = """
+        You are the official AI Concierge for Friendship Hotel in Kathmandu, Nepal.
+        Your job is to answer guest questions politely, accurately, and concisely (1 to 3 sentences max).
+
+        Use ONLY the following hotel information to answer questions:
+        - Location: 123 Main Street, Kathmandu, Nepal
+        - Contact: Phone: +977-1-1234567 | Email: info@friendshiphotel.example.com
+        - History: Welcoming guests since 1998.
+        - Room Types: Standard, Deluxe, Suite.
+        - Dining / Menu:
+          * Starters: Soup of the Day ($6), Spring Rolls ($7)
+          * Main Course: Grilled Chicken ($14), Vegetable Curry ($11), Pasta Alfredo ($13)
+          * Desserts: Chocolate Cake ($5), Ice Cream ($4)
+        - Booking & Reviews: Guests can submit booking requests and leave reviews directly on our website tabs.
+
+        Rules:
+        1. Keep responses short, direct, and under 3 sentences.
+        2. Do NOT invent information not listed above.
+        3. If asked about something outside this hotel's services, politely state you only assist with Friendship Hotel inquiries.
         """
+
+        prompt = f"{system_instruction}\n\nGuest Question: {user_message}"
 
         response = ai_client.models.generate_content(
             model="gemini-2.5-flash",
