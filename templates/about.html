@@ -1,0 +1,21 @@
+ {% extends "base.html" %}
+{% block title %}About Us - Friendship Hotel{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <h1>About Us</h1>
+    <p>Friendship Hotel has been welcoming guests since 1998. We pride ourselves on
+       comfortable rooms, attentive service, and a restaurant that blends local
+       flavors with international favorites.</p>
+
+    <h2>Contact</h2>
+    <ul class="contact-list">
+        <li>Address: 123 Main Street, Kathmandu, Nepal</li>
+        <li>Phone: +977-1-1234567</li>
+        <li>Email: info@friendshiphotel.example.com</li>
+    </ul>
+</section>
+{% endblock %}

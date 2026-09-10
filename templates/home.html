@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Home - Grand Hotel{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>Friendship Hotel</h1>
+    <p>Comfort, luxury, and a warm welcome await you.</p>
+    <a href="{{ url_for('book') }}" class="btn">Book a Room</a>
+</section>
+
+<section class="highlights">
+    <div class="highlight-card">
+        <h3>Comfortable Rooms</h3>
+        <p>Spacious rooms designed for relaxation.</p>
+    </div>
+    <div class="highlight-card">
+        <h3>Fine Dining</h3>
+        <p>Explore our menu of local and international dishes.</p>
+    </div>
+    <div class="highlight-card">
+        <h3>Great Reviews</h3>
+        <p>See what our guests have to say.</p>
+    </div>
+</section>
+
+<div id="chatbot-container">
+    <button id="chatbot-toggle">💬</button>
+    <div id="chatbot-window" class="hidden">
+        <div id="chatbot-header">
+            Chat with us
+            <span id="chatbot-close">&times;</span>
+        </div>
+        <div id="chatbot-messages"></div>
+        <div id="chatbot-input-area">
+            <input type="text" id="chatbot-input" placeholder="Type a message...">
+            <button id="chatbot-send">Send</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+{% endblock %}

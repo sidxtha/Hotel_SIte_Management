@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Menu - Friendship Hotel{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <h1>Our Menu</h1>
+
+    <h2>Starters</h2>
+    <ul class="menu-list">
+        <li><span>Soup of the Day</span><span>$6</span></li>
+        <li><span>Spring Rolls</span><span>$7</span></li>
+    </ul>
+
+    <h2>Main Course</h2>
+    <ul class="menu-list">
+        <li><span>Grilled Chicken</span><span>$14</span></li>
+        <li><span>Vegetable Curry</span><span>$11</span></li>
+        <li><span>Pasta Alfredo</span><span>$13</span></li>
+    </ul>
+
+    <h2>Desserts</h2>
+    <ul class="menu-list">
+        <li><span>Chocolate Cake</span><span>$5</span></li>
+        <li><span>Ice Cream</span><span>$4</span></li>
+    </ul>
+</section>
+{% endblock %}

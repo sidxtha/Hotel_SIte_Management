@@ -1,0 +1,46 @@
+/* ===========================================================
+   menu.css — Restaurant menu listing
+   =========================================================== */
+
+.menu-list {
+  background-color: var(--color-surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--color-border);
+}
+
+.menu-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color var(--transition);
+}
+
+.menu-list li:last-child {
+  border-bottom: none;
+}
+
+.menu-list li:hover {
+  background-color: var(--color-bg);
+}
+
+.menu-list li span:first-child {
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.menu-list li span:last-child {
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+@media (max-width: 480px) {
+  .menu-list li {
+    padding: 0.85rem 1rem;
+    font-size: 0.95rem;
+  }
+}

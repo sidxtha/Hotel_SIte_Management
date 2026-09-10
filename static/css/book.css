@@ -1,0 +1,32 @@
+/* ===========================================================
+   book.css — Booking form page
+   =========================================================== */
+
+.page-section .form-box {
+  margin: 0 auto;
+}
+
+.page-section h1 {
+  display: block;
+  text-align: center;
+  border-bottom: none;
+  margin-bottom: 2rem;
+}
+
+.form-box select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%236f645c' d='M0 0l6 8 6-8z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  padding-right: 2.2rem;
+}
+
+.form-box input[type="date"] {
+  color: var(--color-text);
+}
+
+.form-box .btn {
+  width: 100%;
+  text-align: center;
+  align-self: stretch;
+}

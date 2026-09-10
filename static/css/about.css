@@ -1,0 +1,30 @@
+/* ===========================================================
+   about.css — About Us page
+   =========================================================== */
+
+.page-section p {
+  color: var(--color-text-muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  max-width: 700px;
+}
+
+.contact-list {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 1.25rem 1.5rem;
+  max-width: 480px;
+}
+
+.contact-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+
+.contact-list li:last-child {
+  border-bottom: none;
+}
