@@ -1,20 +1,25 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+import os
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 import mysql.connector
 from mysql.connector import Error
+from google import genai
 
 app = Flask(__name__)
-app.secret_key = "change-this-to-a-random-secret-key"  # needed for flash messages
+app.secret_key = "change-this-to-a-random-secret-key"
 
 # ---------------------------------------------------------------
 # MySQL connection settings
-# Update these to match your local MySQL setup.
+# Update "password" to match your MySQL root password (or "" if none)
 # ---------------------------------------------------------------
 DB_CONFIG = {
     "host": "localhost",
     "user": "root",
-    "password": "your_mysql_password",
+    "password": "sid",  # Change this to your MySQL root password
     "database": "friendship_hotel",
 }
+
+# Initialize Gemini Client (picks up GEMINI_API_KEY environment variable)
+ai_client = genai.Client()
 
 
 def get_db_connection():
@@ -23,7 +28,7 @@ def get_db_connection():
 
 
 # ---------------------------------------------------------------
-# Static pages
+# Static Pages
 # ---------------------------------------------------------------
 @app.route("/")
 def home():
@@ -41,7 +46,35 @@ def menu():
 
 
 # ---------------------------------------------------------------
-# Booking form -> inserts into `bookings` table
+# Chatbot Route (Gemini API Integration)
+# ---------------------------------------------------------------
+@app.route("/api/chat", methods=["POST"])
+def chat():
+    data = request.get_json()
+    user_message = data.get("message", "").strip()
+
+    if not user_message:
+        return jsonify({"reply": "Please enter a valid message."}), 400
+
+    try:
+        # Prompt engineered context for hotel inquiries
+        prompt = f"""
+        You are a helpful and polite concierge for Friendship Hotel in Kathmandu, Nepal.
+        Answer the customer's question clearly and concisely.
+        Customer message: {user_message}
+        """
+
+        response = ai_client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt,
+        )
+        return jsonify({"reply": response.text})
+    except Exception as e:
+        return jsonify({"reply": f"Sorry, I couldn't process that right now. ({str(e)})"}), 500
+
+
+# ---------------------------------------------------------------
+# Booking Form
 # ---------------------------------------------------------------
 @app.route("/book", methods=["GET", "POST"])
 def book():
@@ -76,7 +109,7 @@ def book():
 
 
 # ---------------------------------------------------------------
-# Reviews page -> lists reviews from DB, form inserts a new one
+# Reviews Page
 # ---------------------------------------------------------------
 @app.route("/reviews", methods=["GET", "POST"])
 def reviews():
@@ -101,7 +134,6 @@ def reviews():
 
         return redirect(url_for("reviews"))
 
-    # GET: fetch existing reviews to display
     review_rows = []
     try:
         conn = get_db_connection()

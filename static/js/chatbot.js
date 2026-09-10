@@ -19,13 +19,39 @@ document.addEventListener("DOMContentLoaded", function () {
     messages.scrollTop = messages.scrollHeight;
   }
 
-  function sendMessage() {
+  async function sendMessage() {
     const text = input.value.trim();
     if (!text) return;
+
     addMessage(text, "user");
     input.value = "";
-    // Placeholder bot reply - replace with a real backend call if needed
-    setTimeout(() => addMessage("Thanks for your message! Our team will get back to you soon.", "bot"), 400);
+
+    // Show loading state
+    const loadingMsg = document.createElement("div");
+    loadingMsg.className = "chatbot-message bot";
+    loadingMsg.textContent = "Typing...";
+    messages.appendChild(loadingMsg);
+    messages.scrollTop = messages.scrollHeight;
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text }),
+      });
+
+      const data = await response.json();
+      messages.removeChild(loadingMsg);
+
+      if (response.ok) {
+        addMessage(data.reply, "bot");
+      } else {
+        addMessage(data.reply || "An error occurred.", "bot");
+      }
+    } catch (err) {
+      messages.removeChild(loadingMsg);
+      addMessage("Unable to connect to server.", "bot");
+    }
   }
 
   send.addEventListener("click", sendMessage);
