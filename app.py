@@ -1,24 +1,27 @@
 import os
+from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 import mysql.connector
 from mysql.connector import Error
 from google import genai
 
+# Load environment variables from .env file
+load_dotenv()
+
 app = Flask(__name__)
-app.secret_key = "change-this-to-a-random-secret-key"
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "your_default_secret_key")  # Replace with a secure key in production
 
 # ---------------------------------------------------------------
 # MySQL connection settings
-# Update "password" to match your MySQL root password (or "" if none)
 # ---------------------------------------------------------------
 DB_CONFIG = {
     "host": "localhost",
     "user": "root",
-    "password": "sid",  # Change this to your MySQL root password
+    "password": "sid",  # Your MySQL root password
     "database": "friendship_hotel",
 }
 
-# Initialize Gemini Client (picks up GEMINI_API_KEY environment variable)
+# Initialize Gemini Client (automatically pulls GEMINI_API_KEY from .env)
 ai_client = genai.Client()
 
 
@@ -57,7 +60,7 @@ def chat():
         return jsonify({"reply": "Please enter a valid message."}), 400
 
     try:
-        # Prompt engineered context for hotel inquiries
+        # Context prompt for hotel inquiries
         prompt = f"""
         You are a helpful and polite concierge for Friendship Hotel in Kathmandu, Nepal.
         Answer the customer's question clearly and concisely.
