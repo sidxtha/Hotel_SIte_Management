@@ -4,6 +4,8 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 import mysql.connector
 from mysql.connector import Error
 from google import genai
+import smtplib
+from email.message import EmailMessage
 
 # Load environment variables from .env file
 load_dotenv()
@@ -46,6 +48,67 @@ def about():
 @app.route("/menu")
 def menu():
     return render_template("menu.html")
+
+
+# ---------------------------------------------------------------
+# Place Order Route (Sends email to hotel management)
+# ---------------------------------------------------------------
+@app.route("/place-order", methods=["POST"])
+def place_order():
+    name = request.form.get("customer_name")
+    phone = request.form.get("customer_phone")
+    
+    prices = {
+        'Soup of the Day': 6,
+        'Spring Rolls': 7,
+        'Grilled Chicken': 14,
+        'Vegetable Curry': 11,
+        'Pasta Alfredo': 13,
+        'Chocolate Cake': 5,
+        'Ice Cream': 4
+    }
+    
+    order_items = []
+    total_price = 0
+    
+    for key, price in prices.items():
+        form_field_name = 'item_' + key.lower().replace(' ', '_')
+        qty = int(request.form.get(form_field_name, 0))
+        if qty > 0:
+            subtotal = qty * price
+            total_price += subtotal
+            order_items.append(f"{key} x {qty} = ${subtotal}")
+
+    if not order_items:
+        flash("Please select at least one item to order.")
+        return redirect(url_for("menu"))
+
+    email_content = f"""
+    New Order Received!
+    
+    Customer Name: {name}
+    Phone/Table: {phone}
+    
+    Items Ordered:
+    """ + "\n".join(order_items) + f"\n\nTotal: ${total_price}"
+
+    try:
+        msg = EmailMessage()
+        msg.set_content(email_content)
+        msg['Subject'] = f"New Order from {name}"
+        msg['From'] = os.getenv("MAIL_USERNAME")
+        msg['To'] = os.getenv("HOTEL_OWNER_EMAIL")
+
+        # Using Gmail SMTP server (Port 465)
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+            smtp.login(os.getenv("MAIL_USERNAME"), os.getenv("MAIL_PASSWORD"))
+            smtp.send_message(msg)
+            
+        flash("Your order has been successfully placed and sent to the kitchen!")
+    except Exception as e:
+        flash(f"There was an error sending your order: {e}")
+
+    return redirect(url_for("menu"))
 
 
 # ---------------------------------------------------------------
