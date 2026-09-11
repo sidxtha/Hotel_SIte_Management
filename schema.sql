@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS orders (
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+<<<<<<< HEAD
 CREATE TABLE IF NOT EXISTS order_items (
     id         INT AUTO_INCREMENT PRIMARY KEY,
     order_id   INT NOT NULL,
@@ -38,3 +39,19 @@ CREATE TABLE IF NOT EXISTS order_items (
     subtotal   DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 );
+<<<<<<< HEAD
+=======
+=======
+CREATE TABLE IF NOT EXISTS orders (
+    id            INT AUTO_INCREMENT PRIMARY KEY,
+    customer_name VARCHAR(255) NOT NULL,
+    contact       VARCHAR(255) NOT NULL,
+    items_summary TEXT NOT NULL,
+    total         DECIMAL(10, 2) NOT NULL,
+    notes         TEXT,
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+EXIT;
+>>>>>>> eb009bf (add database)
+>>>>>>> 4566d7714cfb998b71170ca8fe8dae9ae678abb8
