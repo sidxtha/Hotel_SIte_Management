@@ -18,8 +18,10 @@
 {% block content %}
 <section class="page-section">
     <h1>Our Menu</h1>
+    
+    <!-- Menu Banner Image -->
+    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80" alt="Delicious Restaurant Food" class="menu-banner">
 
-    <!-- Wrap the menu lists in a form -->
     <form action="{{ url_for('place_order') }}" method="POST">
         
         <h2>Starters</h2>
@@ -75,50 +77,6 @@
             <button type="submit" class="btn-order">Place Order</button>
         </div>
 
-=======
-    <form action="{{ url_for('order') }}" method="POST" class="order-form">
-
-        {% for category in categories %}
-        <h2>{{ category.name }}</h2>
-        <ul class="menu-list">
-            {% for item in category.dishes %}
-            <li>
-                <span>{{ item.name }}</span>
-                <span class="menu-item-right">
-                    <span class="menu-price">${{ item.price }}</span>
-                    <label class="qty-label" for="qty_{{ item.id }}">Qty</label>
-                    <input
-                        type="number"
-                        id="qty_{{ item.id }}"
-                        name="qty_{{ item.id }}"
-                        min="0"
-                        max="20"
-                        value="0"
-                        class="qty-input"
-                    >
-                </span>
-            </li>
-            {% endfor %}
-        </ul>
-        {% endfor %}
-
-        <div class="order-details">
-            <h2>Your Details</h2>
-            <div class="form-group">
-                <label for="customer_name">Name</label>
-                <input type="text" id="customer_name" name="customer_name" required>
-            </div>
-            <div class="form-group">
-                <label for="contact">Phone or Email</label>
-                <input type="text" id="contact" name="contact" required>
-            </div>
-            <div class="form-group">
-                <label for="notes">Notes (optional)</label>
-                <textarea id="notes" name="notes" rows="3" placeholder="Room number, allergies, special requests..."></textarea>
-            </div>
-            <button type="submit" class="btn-order">Place Order</button>
-        </div>
->>>>>>> eb009bf (add database)
     </form>
 </section>
 {% endblock %}
