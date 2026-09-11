@@ -16,33 +16,6 @@
 .menu-list li {
   display: flex;
   justify-content: space-between;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid var(--color-border);
-  font-weight: 500;
-}
-
-.menu-list li:last-child {
-  border-bottom: none;
-
-}
-/* ===========================================================
-   menu.css — Menu Page
-   =========================================================== */
-
-.menu-list {
-  list-style: none;
-  max-width: 600px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 1rem 1.5rem;
-  margin-bottom: 2rem;
-  box-shadow: var(--shadow-sm);
-}
-
-.menu-list li {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: 0.75rem 0;
   border-bottom: 1px solid var(--color-border);
@@ -53,22 +26,38 @@
   border-bottom: none;
 }
 
-/* Style for quantity inputs */
-.qty-input {
-  width: 60px;
-  padding: 0.3rem;
-  text-align: center;
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
+.menu-item-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-/* Customer details & button container */
-.order-details-box {
+.menu-price {
+  min-width: 2.5rem;
+  text-align: right;
+}
+
+.qty-label {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--color-muted, #666);
+}
+
+.qty-input {
+  width: 4rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font: inherit;
+}
+
+.order-details {
   max-width: 600px;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   padding: 1.5rem;
+  margin-top: 1rem;
   margin-bottom: 2rem;
   box-shadow: var(--shadow-sm);
 }
@@ -77,30 +66,32 @@
   margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
+  gap: 0.35rem;
 }
 
 .form-group label {
-  margin-bottom: 0.3rem;
   font-weight: 500;
 }
 
-.form-group input {
-  padding: 0.5rem;
+.form-group input,
+.form-group textarea {
+  padding: 0.5rem 0.75rem;
   border: 1px solid var(--color-border);
-  border-radius: 4px;
+  border-radius: var(--radius);
+  font: inherit;
 }
 
 .btn-order {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  border-radius: 4px;
-  cursor: pointer;
   width: 100%;
+  padding: 0.65rem 1.5rem;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--color-primary, #2b6cb0);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .btn-order:hover {
-  background-color: #0056b3;
+  opacity: 0.9;
 }

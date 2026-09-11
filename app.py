@@ -1,4 +1,6 @@
 import os
+import smtplib
+from email.mime.text import MIMEText
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 import mysql.connector
@@ -22,6 +24,57 @@ DB_CONFIG = {
     "password": "",  # Your MySQL root password
     "database": "friendship_hotel",
 }
+
+# ---------------------------------------------------------------
+# Email Notification Configuration (for new orders)
+# ---------------------------------------------------------------
+SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
+SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
+EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")        # the account that SENDS the email
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")      # Gmail App Password (not your normal password)
+NOTIFY_EMAIL = os.getenv("NOTIFY_EMAIL", EMAIL_ADDRESS)  # where order alerts are RECEIVED
+
+# ---------------------------------------------------------------
+# Menu Catalog (single source of truth for prices/items)
+# ---------------------------------------------------------------
+MENU_ITEMS = [
+    {"id": "soup", "name": "Soup of the Day", "price": 6, "category": "Starters"},
+    {"id": "spring_rolls", "name": "Spring Rolls", "price": 7, "category": "Starters"},
+    {"id": "grilled_chicken", "name": "Grilled Chicken", "price": 14, "category": "Main Course"},
+    {"id": "veg_curry", "name": "Vegetable Curry", "price": 11, "category": "Main Course"},
+    {"id": "pasta_alfredo", "name": "Pasta Alfredo", "price": 13, "category": "Main Course"},
+    {"id": "choc_cake", "name": "Chocolate Cake", "price": 5, "category": "Desserts"},
+    {"id": "ice_cream", "name": "Ice Cream", "price": 4, "category": "Desserts"},
+]
+
+
+def send_order_email(customer_name, contact, order_lines, total, notes):
+    """Email the hotel staff the moment a new order comes in."""
+    if not EMAIL_ADDRESS or not EMAIL_PASSWORD or not NOTIFY_EMAIL:
+        raise RuntimeError(
+            "Email is not configured. Set EMAIL_ADDRESS, EMAIL_PASSWORD and NOTIFY_EMAIL in .env"
+        )
+
+    items_text = "\n".join(f"- {line}" for line in order_lines)
+    body = (
+        f"New order from: {customer_name}\n"
+        f"Contact: {contact}\n\n"
+        f"Items:\n{items_text}\n\n"
+        f"Total: ${total:.2f}\n"
+    )
+    if notes:
+        body += f"\nNotes: {notes}\n"
+
+    msg = MIMEText(body)
+    msg["Subject"] = f"New Food Order - {customer_name} (${total:.2f})"
+    msg["From"] = EMAIL_ADDRESS
+    msg["To"] = NOTIFY_EMAIL
+
+    with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+        server.starttls()
+        server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+        server.sendmail(EMAIL_ADDRESS, [NOTIFY_EMAIL], msg.as_string())
+
 
 # Initialize Gemini Client (automatically pulls GEMINI_API_KEY from .env)
 ai_client = genai.Client()
@@ -47,7 +100,73 @@ def about():
 
 @app.route("/menu")
 def menu():
-    return render_template("menu.html")
+    categories = []
+    for item in MENU_ITEMS:
+        cat = next((c for c in categories if c["name"] == item["category"]), None)
+        if cat is None:
+            cat = {"name": item["category"], "dishes": []}
+            categories.append(cat)
+        cat["dishes"].append(item)
+    return render_template("menu.html", categories=categories)
+
+
+# ---------------------------------------------------------------
+# Order Form (from the Menu page)
+# ---------------------------------------------------------------
+@app.route("/order", methods=["POST"])
+def order():
+    customer_name = (request.form.get("customer_name") or "").strip()
+    contact = (request.form.get("contact") or "").strip()
+    notes = (request.form.get("notes") or "").strip()
+
+    if not customer_name or not contact:
+        flash("Please enter your name and a phone/email so we can reach you.")
+        return redirect(url_for("menu"))
+
+    order_lines = []
+    total = 0.0
+    for item in MENU_ITEMS:
+        try:
+            qty = int(request.form.get(f"qty_{item['id']}", 0) or 0)
+        except ValueError:
+            qty = 0
+        if qty > 0:
+            line_total = qty * item["price"]
+            total += line_total
+            order_lines.append(f"{item['name']} x{qty} = ${line_total:.2f}")
+
+    if not order_lines:
+        flash("Please select at least one item to order.")
+        return redirect(url_for("menu"))
+
+    items_summary = "; ".join(order_lines)
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            INSERT INTO orders (customer_name, contact, items_summary, total, notes)
+            VALUES (%s, %s, %s, %s, %s)
+            """,
+            (customer_name, contact, items_summary, total, notes),
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Error as e:
+        flash(f"Something went wrong saving your order: {e}")
+        return redirect(url_for("menu"))
+
+    try:
+        send_order_email(customer_name, contact, order_lines, total, notes)
+    except Exception as e:
+        # Order is already saved in the database even if the email fails.
+        flash(f"Order placed, but the notification email failed to send: {e}")
+        return redirect(url_for("menu"))
+
+    flash("Thanks! Your order has been placed. We'll be in touch shortly.")
+    return redirect(url_for("menu"))
 
 
 # ---------------------------------------------------------------
