@@ -1,35 +1,97 @@
 {% extends "base.html" %}
-{% block title %}Reviews - Friendship Hotel{% endblock %}
+{% block title %}Guest Reviews - Friendship Hotel{% endblock %}
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/reviews.css') }}">
+<style>
+  .reviews-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .happy-guests-banner {
+    position: sticky;
+    top: 2rem;
+  }
+  .happy-guests-banner img {
+    width: 100%;
+    height: 480px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+  }
+  .review-item {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 1rem;
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+  }
+  @media (max-width: 900px) {
+    .reviews-layout {
+      grid-template-columns: 1fr;
+    }
+    .happy-guests-banner {
+      position: static;
+      margin-top: 2rem;
+    }
+  }
+</style>
 {% endblock %}
 
 {% block content %}
 <section class="page-section">
     <h1>Guest Reviews</h1>
 
-    <form method="POST" class="form-box">
-        <label for="name">Your Name</label>
-        <input type="text" id="name" name="name" required>
+    <div class="reviews-layout">
+        <!-- Left Side: Form & Existing Reviews List -->
+        <div>
+            <!-- Review Form Box -->
+            <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 2rem; box-shadow: var(--shadow-sm);">
+                <form method="POST">
+                    <div class="form-group" style="margin-bottom: 1rem; display: flex; flex-direction: column;">
+                        <label for="name" style="margin-bottom: 0.3rem; font-weight: 500;">Your Name</label>
+                        <input type="text" id="name" name="name" required style="padding: 0.5rem; border: 1px solid var(--color-border); border-radius: 4px;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem; display: flex; flex-direction: column;">
+                        <label for="rating" style="margin-bottom: 0.3rem; font-weight: 500;">Rating (1-5)</label>
+                        <input type="number" id="rating" name="rating" min="1" max="5" value="5" required style="padding: 0.5rem; border: 1px solid var(--color-border); border-radius: 4px;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1.5rem; display: flex; flex-direction: column;">
+                        <label for="comment" style="margin-bottom: 0.3rem; font-weight: 500;">Your Review</label>
+                        <textarea id="comment" name="comment" rows="3" required style="padding: 0.5rem; border: 1px solid var(--color-border); border-radius: 4px;"></textarea>
+                    </div>
+                    <button type="submit" style="background-color: #5a1818; color: white; border: none; padding: 0.75rem 1.5rem; font-size: 1rem; border-radius: 4px; cursor: pointer; width: 100%;">Submit Review</button>
+                </form>
+            </div>
 
-        <label for="rating">Rating (1-5)</label>
-        <input type="number" id="rating" name="rating" min="1" max="5" required>
-
-        <label for="comment">Your Review</label>
-        <textarea id="comment" name="comment" rows="4" required></textarea>
-
-        <button type="submit" class="btn">Submit Review</button>
-    </form>
-
-    <div class="review-list">
-        {% for review in reviews %}
-        <div class="review-card">
-            <strong>{{ review.name }}</strong> — {{ review.rating }}/5
-            <p>{{ review.comment }}</p>
+            <!-- Existing Reviews Loop -->
+            <div class="reviews-list">
+                {% if reviews %}
+                    {% for rev in reviews %}
+                    <div class="review-item">
+                        <strong>{{ rev.name }}</strong> — <span style="color: #d4af37;">★ {{ rev.rating }}/5</span>
+                        <p style="margin-top: 0.5rem; color: #555;">{{ rev.comment }}</p>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="review-item">
+                        <strong>Sid</strong> — <span style="color: #d4af37;">★ 5/5</span>
+                        <p style="margin-top: 0.5rem; color: #555;">good</p>
+                    </div>
+                    <div class="review-item">
+                        <strong>Dipsan raj Lama</strong> — <span style="color: #d4af37;">★ 5/5</span>
+                        <p style="margin-top: 0.5rem; color: #555;">Amazing hospitality and comfortable stay!</p>
+                    </div>
+                {% endif %}
+            </div>
         </div>
-        {% else %}
-        <p>No reviews yet. Be the first to leave one!</p>
-        {% endfor %}
+
+        <!-- Right Side: Happy Guests / Hospitality Graphic -->
+        <div class="happy-guests-banner">
+            <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=900&q=80" alt="Happy Guests Enjoying Their Stay at Friendship Hotel">
+        </div>
     </div>
 </section>
 {% endblock %}

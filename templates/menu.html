@@ -3,14 +3,36 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
 <style>
-  .menu-banner {
+  .menu-layout-wrapper {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 3rem;
+    align-items: start;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .menu-graphic-container {
+    position: sticky;
+    top: 2rem;
+  }
+  .menu-graphic-container img {
     width: 100%;
-    max-width: 600px;
-    height: 180px;
+    height: 550px;
     object-fit: cover;
     border-radius: var(--radius);
-    margin-bottom: 1.5rem;
     box-shadow: var(--shadow-sm);
+  }
+  @media (max-width: 900px) {
+    .menu-layout-wrapper {
+      grid-template-columns: 1fr;
+    }
+    .menu-graphic-container {
+      position: static;
+      margin-top: 2rem;
+    }
+    .menu-graphic-container img {
+      height: 300px;
+    }
   }
 </style>
 {% endblock %}
@@ -19,64 +41,69 @@
 <section class="page-section">
     <h1>Our Menu</h1>
     
-    <!-- Menu Banner Image -->
-    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80" alt="Delicious Restaurant Food" class="menu-banner">
+    <div class="menu-layout-wrapper">
+        <!-- Left Side: Order Form & Items -->
+        <div>
+            <form action="{{ url_for('place_order') }}" method="POST">
+                <h2>Starters</h2>
+                <ul class="menu-list">
+                    <li>
+                        <span>Soup of the Day ($6)</span>
+                        <input type="number" name="item_soup_of_the_day" value="0" min="0" class="qty-input">
+                    </li>
+                    <li>
+                        <span>Spring Rolls ($7)</span>
+                        <input type="number" name="item_spring_rolls" value="0" min="0" class="qty-input">
+                    </li>
+                </ul>
 
-    <form action="{{ url_for('place_order') }}" method="POST">
-        
-        <h2>Starters</h2>
-        <ul class="menu-list">
-            <li>
-                <span>Soup of the Day ($6)</span>
-                <input type="number" name="item_soup_of_the_day" value="0" min="0" class="qty-input">
-            </li>
-            <li>
-                <span>Spring Rolls ($7)</span>
-                <input type="number" name="item_spring_rolls" value="0" min="0" class="qty-input">
-            </li>
-        </ul>
+                <h2>Main Course</h2>
+                <ul class="menu-list">
+                    <li>
+                        <span>Grilled Chicken ($14)</span>
+                        <input type="number" name="item_grilled_chicken" value="0" min="0" class="qty-input">
+                    </li>
+                    <li>
+                        <span>Vegetable Curry ($11)</span>
+                        <input type="number" name="item_vegetable_curry" value="0" min="0" class="qty-input">
+                    </li>
+                    <li>
+                        <span>Pasta Alfredo ($13)</span>
+                        <input type="number" name="item_pasta_alfredo" value="0" min="0" class="qty-input">
+                    </li>
+                </ul>
 
-        <h2>Main Course</h2>
-        <ul class="menu-list">
-            <li>
-                <span>Grilled Chicken ($14)</span>
-                <input type="number" name="item_grilled_chicken" value="0" min="0" class="qty-input">
-            </li>
-            <li>
-                <span>Vegetable Curry ($11)</span>
-                <input type="number" name="item_vegetable_curry" value="0" min="0" class="qty-input">
-            </li>
-            <li>
-                <span>Pasta Alfredo ($13)</span>
-                <input type="number" name="item_pasta_alfredo" value="0" min="0" class="qty-input">
-            </li>
-        </ul>
+                <h2>Desserts</h2>
+                <ul class="menu-list">
+                    <li>
+                        <span>Chocolate Cake ($5)</span>
+                        <input type="number" name="item_chocolate_cake" value="0" min="0" class="qty-input">
+                    </li>
+                    <li>
+                        <span>Ice Cream ($4)</span>
+                        <input type="number" name="item_ice_cream" value="0" min="0" class="qty-input">
+                    </li>
+                </ul>
 
-        <h2>Desserts</h2>
-        <ul class="menu-list">
-            <li>
-                <span>Chocolate Cake ($5)</span>
-                <input type="number" name="item_chocolate_cake" value="0" min="0" class="qty-input">
-            </li>
-            <li>
-                <span>Ice Cream ($4)</span>
-                <input type="number" name="item_ice_cream" value="0" min="0" class="qty-input">
-            </li>
-        </ul>
-
-        <div class="order-details-box">
-            <h2>Your Details</h2>
-            <div class="form-group">
-                <label for="customer_name">Name:</label>
-                <input type="text" id="customer_name" name="customer_name" required>
-            </div>
-            <div class="form-group">
-                <label for="customer_phone">Phone / Table No:</label>
-                <input type="text" id="customer_phone" name="customer_phone" required>
-            </div>
-            <button type="submit" class="btn-order">Place Order</button>
+                <div class="order-details-box" style="margin-top: 2rem;">
+                    <h2>Your Details</h2>
+                    <div class="form-group">
+                        <label for="customer_name">Name:</label>
+                        <input type="text" id="customer_name" name="customer_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customer_phone">Phone / Table No:</label>
+                        <input type="text" id="customer_phone" name="customer_phone" required>
+                    </div>
+                    <button type="submit" class="btn-order">Place Order</button>
+                </div>
+            </form>
         </div>
 
-    </form>
+        <!-- Right Side: Clean Professional Menu Graphics -->
+        <div class="menu-graphic-container">
+            <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=900&q=80" alt="Fresh Gourmet Cuisine Graphics">
+        </div>
+    </div>
 </section>
 {% endblock %}
