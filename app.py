@@ -51,7 +51,7 @@ def menu():
 
 
 # ---------------------------------------------------------------
-# Place Order Route (Sends email to hotel management)
+# Place Order Route (Saves to Database & Sends Email)
 # ---------------------------------------------------------------
 @app.route("/place-order", methods=["POST"])
 def place_order():
@@ -77,36 +77,61 @@ def place_order():
         if qty > 0:
             subtotal = qty * price
             total_price += subtotal
-            order_items.append(f"{key} x {qty} = ${subtotal}")
+            order_items.append((key, qty, subtotal))
 
     if not order_items:
         flash("Please select at least one item to order.")
         return redirect(url_for("menu"))
 
+    # 1. Save order to database
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute(
+            "INSERT INTO orders (name, phone, total_price) VALUES (%s, %s, %s)",
+            (name, phone, total_price)
+        )
+        order_id = cursor.lastrowid
+        
+        for item_name, qty, subtotal in order_items:
+            cursor.execute(
+                "INSERT INTO order_items (order_id, item_name, quantity, subtotal) VALUES (%s, %s, %s, %s)",
+                (order_id, item_name, qty, subtotal)
+            )
+            
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Error as e:
+        flash(f"Database error saving order: {e}")
+        return redirect(url_for("menu"))
+
+    # 2. Format and send email
+    email_lines = [f"{item[0]} x {item[1]} = ${item[2]}" for item in order_items]
     email_content = f"""
-    New Order Received!
+    New Order Received! (Order ID: #{order_id})
     
     Customer Name: {name}
     Phone/Table: {phone}
     
     Items Ordered:
-    """ + "\n".join(order_items) + f"\n\nTotal: ${total_price}"
+    """ + "\n".join(email_lines) + f"\n\nTotal: ${total_price}"
 
     try:
         msg = EmailMessage()
         msg.set_content(email_content)
-        msg['Subject'] = f"New Order from {name}"
+        msg['Subject'] = f"New Order from {name} (# {order_id})"
         msg['From'] = os.getenv("MAIL_USERNAME")
         msg['To'] = os.getenv("HOTEL_OWNER_EMAIL")
 
-        # Using Gmail SMTP server (Port 465)
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
             smtp.login(os.getenv("MAIL_USERNAME"), os.getenv("MAIL_PASSWORD"))
             smtp.send_message(msg)
             
-        flash("Your order has been successfully placed and sent to the kitchen!")
+        flash("Your order has been successfully placed and saved!")
     except Exception as e:
-        flash(f"There was an error sending your order: {e}")
+        flash(f"Order saved to database, but email failed to send: {e}")
 
     return redirect(url_for("menu"))
 

@@ -22,5 +22,19 @@ CREATE TABLE IF NOT EXISTS reviews (
     comment     TEXT,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE IF NOT EXISTS orders (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    phone       VARCHAR(50) NOT NULL,
+    total_price DECIMAL(10, 2) NOT NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-EXIT;
+CREATE TABLE IF NOT EXISTS order_items (
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    order_id   INT NOT NULL,
+    item_name  VARCHAR(100) NOT NULL,
+    quantity   INT NOT NULL,
+    subtotal   DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+);
