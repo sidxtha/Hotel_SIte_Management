@@ -1,36 +1,66 @@
 {% extends "base.html" %}
 {% block title %}Book a Room - Friendship Hotel{% endblock %}
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
+<style>
+  .booking-banner {
+    width: 100%;
+    max-width: 600px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+</style>
 {% endblock %}
 
 {% block content %}
 <section class="page-section">
     <h1>Book a Room</h1>
-    <form method="POST" class="form-box">
-        <label for="name">Full Name</label>
-        <input type="text" id="name" name="name" required>
+    
+    <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=800&q=80" alt="Luxurious Hotel Room" class="booking-banner">
 
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required>
-
-        <label for="check_in">Check-in Date</label>
-        <input type="date" id="check_in" name="check_in" required>
-
-        <label for="check_out">Check-out Date</label>
-        <input type="date" id="check_out" name="check_out" required>
-
-        <label for="room_type">Room Type</label>
-        <select id="room_type" name="room_type" required>
-            <option value="Standard">Standard</option>
-            <option value="Deluxe">Deluxe</option>
-            <option value="Suite">Suite</option>
-        </select>
-
-        <label for="guests">Number of Guests</label>
-        <input type="number" id="guests" name="guests" min="1" required>
-
-        <button type="submit" class="btn">Submit Booking</button>
-    </form>
+    <div class="order-details-box" style="max-width: 600px; margin: 0 auto; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow-sm);">
+        <form method="POST">
+            <div class="form-group" style="margin-bottom: 1rem; display: flex; flex-direction: column;">
+                <label for="name" style="margin-bottom: 0.3rem; font-weight: 500;">Full Name</label>
+                <input type="text" id="name" name="name" required style="padding: 0.5rem; border: 1px solid var(--color-border); border-radius: 4px;">
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 1rem; display: flex; flex-direction: column;">
+                <label for="email" style="margin-bottom: 0.3rem; font-weight: 500;">Email</label>
+                <input type="email" id="email" name="email" required style="padding: 0.5rem; border: 1px solid var(--color-border); border-radius: 4px;">
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 1rem; display: flex; flex-direction: column;">
+                <label for="check_in" style="margin-bottom: 0.3rem; font-weight: 500;">Check-in Date</label>
+                <input type="date" id="check_in" name="check_in" required style="padding: 0.5rem; border: 1px solid var(--color-border); border-radius: 4px;">
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 1rem; display: flex; flex-direction: column;">
+                <label for="check_out" style="margin-bottom: 0.3rem; font-weight: 500;">Check-out Date</label>
+                <input type="date" id="check_out" name="check_out" required style="padding: 0.5rem; border: 1px solid var(--color-border); border-radius: 4px;">
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 1rem; display: flex; flex-direction: column;">
+                <label for="room_type" style="margin-bottom: 0.3rem; font-weight: 500;">Room Type</label>
+                <select id="room_type" name="room_type" style="padding: 0.5rem; border: 1px solid var(--color-border); border-radius: 4px;">
+                    <option value="Standard">Standard</option>
+                    <option value="Deluxe">Deluxe</option>
+                    <option value="Suite">Suite</option>
+                </select>
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 1.5rem; display: flex; flex-direction: column;">
+                <label for="guests" style="margin-bottom: 0.3rem; font-weight: 500;">Number of Guests</label>
+                <input type="number" id="guests" name="guests" min="1" value="1" required style="padding: 0.5rem; border: 1px solid var(--color-border); border-radius: 4px;">
+            </div>
+            
+            <button type="submit" class="btn-order" style="background-color: #5a1818; color: white; border: none; padding: 0.75rem 1.5rem; font-size: 1rem; border-radius: 4px; cursor: pointer; width: 100%;">Confirm Booking</button>
+        </form>
+    </div>
 </section>
 {% endblock %}
