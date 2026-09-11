@@ -2,6 +2,14 @@
 {% block title %}Home - Grand Hotel{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+<style>
+  /* Custom size adjustments for the AI chatbot toggle button */
+  #chatbot-toggle {
+    width: 70px;   /* Increases the width */
+    height: 70px;  /* Increases the height to make it a circle/square */
+    font-size: 32px; /* Makes the chat bubble emoji (💬) larger */
+  }
+</style>
 {% endblock %}
 
 {% block content %}
