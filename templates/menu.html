@@ -2,171 +2,54 @@
 {% block title %}Menu - Friendship Hotel{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
-<style>
-  /* Top Banner Image */
-  .menu-banner {
-    width: 100%;
-    max-height: 250px;
-    object-fit: cover;
-    border-radius: var(--radius);
-    margin-bottom: 2rem;
-    box-shadow: var(--shadow-sm);
-    display: block;
-  }
-
-  /* Two column arrangement */
-  .menu-layout-wrapper {
-    display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
-    gap: 3rem;
-    align-items: start;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  /* Aesthetic Small Thumbnail Image Gallery on the Right */
-  .menu-thumbnails-sidebar {
-    position: sticky;
-    top: 2rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-  .thumb-card {
-    position: relative;
-    border-radius: calc(var(--radius) - 4px);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--color-border);
-  }
-  .thumb-card img {
-    width: 100%;
-    height: 130px;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.3s ease;
-  }
-  .thumb-card:hover img {
-    transform: scale(1.05);
-  }
-  .thumb-label {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(90, 24, 24, 0.85);
-    color: white;
-    font-size: 0.75rem;
-    padding: 0.3rem;
-    text-align: center;
-    font-weight: 500;
-  }
-
-  @media (max-width: 900px) {
-    .menu-layout-wrapper {
-      grid-template-columns: 1fr;
-    }
-    .menu-thumbnails-sidebar {
-      position: static;
-      margin-top: 2rem;
-    }
-  }
-</style>
 {% endblock %}
 
 {% block content %}
 <section class="page-section">
     <h1>Our Menu</h1>
-    
-    <!-- Popping Top Banner Image -->
-    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80" alt="Delicious Restaurant Banner" class="menu-banner">
 
-    <div class="menu-layout-wrapper">
-        <!-- Left Side: Order Form & Items List -->
-        <div>
-            <form action="{{ url_for('place_order') }}" method="POST">
-                <h2>Starters</h2>
-                <ul class="menu-list">
-                    <li>
-                        <span>Soup of the Day ($6)</span>
-                        <input type="number" name="item_soup_of_the_day" value="0" min="0" class="qty-input">
-                    </li>
-                    <li>
-                        <span>Spring Rolls ($7)</span>
-                        <input type="number" name="item_spring_rolls" value="0" min="0" class="qty-input">
-                    </li>
-                </ul>
+    <form action="{{ url_for('order') }}" method="POST" class="order-form">
 
-                <h2>Main Course</h2>
-                <ul class="menu-list">
-                    <li>
-                        <span>Grilled Chicken ($14)</span>
-                        <input type="number" name="item_grilled_chicken" value="0" min="0" class="qty-input">
-                    </li>
-                    <li>
-                        <span>Vegetable Curry ($11)</span>
-                        <input type="number" name="item_vegetable_curry" value="0" min="0" class="qty-input">
-                    </li>
-                    <li>
-                        <span>Pasta Alfredo ($13)</span>
-                        <input type="number" name="item_pasta_alfredo" value="0" min="0" class="qty-input">
-                    </li>
-                </ul>
+        {% for category in categories %}
+        <h2>{{ category.name }}</h2>
+        <ul class="menu-list">
+            {% for item in category.dishes %}
+            <li>
+                <span>{{ item.name }}</span>
+                <span class="menu-item-right">
+                    <span class="menu-price">${{ item.price }}</span>
+                    <label class="qty-label" for="qty_{{ item.id }}">Qty</label>
+                    <input
+                        type="number"
+                        id="qty_{{ item.id }}"
+                        name="qty_{{ item.id }}"
+                        min="0"
+                        max="20"
+                        value="0"
+                        class="qty-input"
+                    >
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endfor %}
 
-                <h2>Desserts</h2>
-                <ul class="menu-list">
-                    <li>
-                        <span>Chocolate Cake ($5)</span>
-                        <input type="number" name="item_chocolate_cake" value="0" min="0" class="qty-input">
-                    </li>
-                    <li>
-                        <span>Ice Cream ($4)</span>
-                        <input type="number" name="item_ice_cream" value="0" min="0" class="qty-input">
-                    </li>
-                </ul>
-
-                <div class="order-details-box" style="margin-top: 2rem;">
-                    <h2>Your Details</h2>
-                    <div class="form-group">
-                        <label for="customer_name">Name:</label>
-                        <input type="text" id="customer_name" name="customer_name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="customer_phone">Phone / Table No:</label>
-                        <input type="text" id="customer_phone" name="customer_phone" required>
-                    </div>
-                    <button type="submit" class="btn-order">Place Order</button>
-                </div>
-            </form>
+        <div class="order-details">
+            <h2>Your Details</h2>
+            <div class="form-group">
+                <label for="customer_name">Name</label>
+                <input type="text" id="customer_name" name="customer_name" required>
+            </div>
+            <div class="form-group">
+                <label for="contact">Phone or Email</label>
+                <input type="text" id="contact" name="contact" required>
+            </div>
+            <div class="form-group">
+                <label for="notes">Notes (optional)</label>
+                <textarea id="notes" name="notes" rows="3" placeholder="Room number, allergies, special requests..."></textarea>
+            </div>
+            <button type="submit" class="btn-order">Place Order</button>
         </div>
-
-        <!-- Right Side: Aesthetic Food Preview Thumbnails Gallery -->
-        <div class="menu-thumbnails-sidebar">
-            <div class="thumb-card">
-                <img src="https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=500&q=80" alt="Soup">
-                <div class="thumb-label">Soup of the Day</div>
-            </div>
-            <div class="thumb-card">
-                <img src="https://images.unsplash.com/photo-1541529086526-db283c563270?auto=format&fit=crop&w=500&q=80" alt="Spring Rolls">
-                <div class="thumb-label">Spring Rolls</div>
-            </div>
-            <div class="thumb-card">
-                <img src="https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=500&q=80" alt="Grilled Chicken">
-                <div class="thumb-label">Grilled Chicken</div>
-            </div>
-            <div class="thumb-card">
-                <img src="https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=500&q=80" alt="Vegetable Curry">
-                <div class="thumb-label">Vegetable Curry</div>
-            </div>
-            <div class="thumb-card">
-                <img src="https://images.unsplash.com/photo-1608897013039-887f21d8c804?auto=format&fit=crop&w=500&q=80" alt="Pasta Alfredo">
-                <div class="thumb-label">Pasta Alfredo</div>
-            </div>
-            <div class="thumb-card">
-                <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=500&q=80" alt="Chocolate Cake">
-                <div class="thumb-label">Chocolate Cake</div>
-            </div>
-        </div>
-    </div>
+    </form>
 </section>
 {% endblock %}
