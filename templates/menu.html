@@ -3,6 +3,18 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
 <style>
+  /* Top Banner Image */
+  .menu-banner {
+    width: 100%;
+    max-height: 250px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-sm);
+    display: block;
+  }
+
+  /* Two column arrangement */
   .menu-layout-wrapper {
     display: grid;
     grid-template-columns: 1.2fr 0.8fr;
@@ -11,27 +23,52 @@
     max-width: 1200px;
     margin: 0 auto;
   }
-  .menu-graphic-container {
+
+  /* Aesthetic Small Thumbnail Image Gallery on the Right */
+  .menu-thumbnails-sidebar {
     position: sticky;
     top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
   }
-  .menu-graphic-container img {
-    width: 100%;
-    height: 550px;
-    object-fit: cover;
-    border-radius: var(--radius);
+  .thumb-card {
+    position: relative;
+    border-radius: calc(var(--radius) - 4px);
+    overflow: hidden;
     box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border);
   }
+  .thumb-card img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+  .thumb-card:hover img {
+    transform: scale(1.05);
+  }
+  .thumb-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(90, 24, 24, 0.85);
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.3rem;
+    text-align: center;
+    font-weight: 500;
+  }
+
   @media (max-width: 900px) {
     .menu-layout-wrapper {
       grid-template-columns: 1fr;
     }
-    .menu-graphic-container {
+    .menu-thumbnails-sidebar {
       position: static;
       margin-top: 2rem;
-    }
-    .menu-graphic-container img {
-      height: 300px;
     }
   }
 </style>
@@ -41,8 +78,11 @@
 <section class="page-section">
     <h1>Our Menu</h1>
     
+    <!-- Popping Top Banner Image -->
+    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80" alt="Delicious Restaurant Banner" class="menu-banner">
+
     <div class="menu-layout-wrapper">
-        <!-- Left Side: Order Form & Items -->
+        <!-- Left Side: Order Form & Items List -->
         <div>
             <form action="{{ url_for('place_order') }}" method="POST">
                 <h2>Starters</h2>
@@ -100,9 +140,32 @@
             </form>
         </div>
 
-        <!-- Right Side: Clean Professional Menu Graphics -->
-        <div class="menu-graphic-container">
-            <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=900&q=80" alt="Fresh Gourmet Cuisine Graphics">
+        <!-- Right Side: Aesthetic Food Preview Thumbnails Gallery -->
+        <div class="menu-thumbnails-sidebar">
+            <div class="thumb-card">
+                <img src="https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=500&q=80" alt="Soup">
+                <div class="thumb-label">Soup of the Day</div>
+            </div>
+            <div class="thumb-card">
+                <img src="https://images.unsplash.com/photo-1548625361-1632128a16c8?auto=format&fit=crop&w=500&q=80" alt="Spring Rolls">
+                <div class="thumb-label">Spring Rolls</div>
+            </div>
+            <div class="thumb-card">
+                <img src="https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=500&q=80" alt="Grilled Chicken">
+                <div class="thumb-label">Grilled Chicken</div>
+            </div>
+            <div class="thumb-card">
+                <img src="https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=500&q=80" alt="Vegetable Curry">
+                <div class="thumb-label">Vegetable Curry</div>
+            </div>
+            <div class="thumb-card">
+                <img src="https://images.unsplash.com/photo-1621996346565-e3d5d6281298?auto=format&fit=crop&w=500&q=80" alt="Pasta Alfredo">
+                <div class="thumb-label">Pasta Alfredo</div>
+            </div>
+            <div class="thumb-card">
+                <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=500&q=80" alt="Chocolate Cake">
+                <div class="thumb-label">Chocolate Cake</div>
+            </div>
         </div>
     </div>
 </section>
