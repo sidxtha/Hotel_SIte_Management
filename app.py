@@ -62,8 +62,13 @@ def send_email_notification(subject, body_text):
 
 
 @app.route("/")
-def index():
+def home():
     return render_template("home.html")
+
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
 
 
 @app.route("/menu")
