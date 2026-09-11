@@ -8,23 +8,63 @@
 <section class="page-section">
     <h1>Our Menu</h1>
 
-    <h2>Starters</h2>
-    <ul class="menu-list">
-        <li><span>Soup of the Day</span><span>$6</span></li>
-        <li><span>Spring Rolls</span><span>$7</span></li>
-    </ul>
+    <!-- Wrap the menu lists in a form -->
+    <form action="{{ url_for('place_order') }}" method="POST">
+        
+        <h2>Starters</h2>
+        <ul class="menu-list">
+            <li>
+                <span>Soup of the Day ($6)</span>
+                <input type="number" name="item_soup_of_the_day" value="0" min="0" class="qty-input">
+            </li>
+            <li>
+                <span>Spring Rolls ($7)</span>
+                <input type="number" name="item_spring_rolls" value="0" min="0" class="qty-input">
+            </li>
+        </ul>
 
-    <h2>Main Course</h2>
-    <ul class="menu-list">
-        <li><span>Grilled Chicken</span><span>$14</span></li>
-        <li><span>Vegetable Curry</span><span>$11</span></li>
-        <li><span>Pasta Alfredo</span><span>$13</span></li>
-    </ul>
+        <h2>Main Course</h2>
+        <ul class="menu-list">
+            <li>
+                <span>Grilled Chicken ($14)</span>
+                <input type="number" name="item_grilled_chicken" value="0" min="0" class="qty-input">
+            </li>
+            <li>
+                <span>Vegetable Curry ($11)</span>
+                <input type="number" name="item_vegetable_curry" value="0" min="0" class="qty-input">
+            </li>
+            <li>
+                <span>Pasta Alfredo ($13)</span>
+                <input type="number" name="item_pasta_alfredo" value="0" min="0" class="qty-input">
+            </li>
+        </ul>
 
-    <h2>Desserts</h2>
-    <ul class="menu-list">
-        <li><span>Chocolate Cake</span><span>$5</span></li>
-        <li><span>Ice Cream</span><span>$4</span></li>
-    </ul>
+        <h2>Desserts</h2>
+        <ul class="menu-list">
+            <li>
+                <span>Chocolate Cake ($5)</span>
+                <input type="number" name="item_chocolate_cake" value="0" min="0" class="qty-input">
+            </li>
+            <li>
+                <span>Ice Cream ($4)</span>
+                <input type="number" name="item_ice_cream" value="0" min="0" class="qty-input">
+            </li>
+        </ul>
+
+        <!-- Customer Details & Submit -->
+        <div class="order-details-box">
+            <h2>Your Details</h2>
+            <div class="form-group">
+                <label for="customer_name">Name:</label>
+                <input type="text" id="customer_name" name="customer_name" required>
+            </div>
+            <div class="form-group">
+                <label for="customer_phone">Phone / Table No:</label>
+                <input type="text" id="customer_phone" name="customer_phone" required>
+            </div>
+            <button type="submit" class="btn-order">Place Order</button>
+        </div>
+
+    </form>
 </section>
 {% endblock %}
