@@ -23,4 +23,84 @@
 
 .menu-list li:last-child {
   border-bottom: none;
+
+}
+/* ===========================================================
+   menu.css — Menu Page
+   =========================================================== */
+
+.menu-list {
+  list-style: none;
+  max-width: 600px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.menu-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 500;
+}
+
+.menu-list li:last-child {
+  border-bottom: none;
+}
+
+/* Style for quantity inputs */
+.qty-input {
+  width: 60px;
+  padding: 0.3rem;
+  text-align: center;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+/* Customer details & button container */
+.order-details-box {
+  max-width: 600px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 0.3rem;
+  font-weight: 500;
+}
+
+.form-group input {
+  padding: 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+.btn-order {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-order:hover {
+  background-color: #0056b3;
 }
