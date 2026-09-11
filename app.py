@@ -19,7 +19,7 @@ app.secret_key = os.getenv("SECRET_KEY", "change-this-to-a-random-secret-key")
 DB_CONFIG = {
     "host": "localhost",
     "user": "root",
-    "password": "sid",  # Your MySQL root password
+    "password": "",  # Your MySQL root password
     "database": "friendship_hotel",
 }
 
